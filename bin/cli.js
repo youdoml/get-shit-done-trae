@@ -14,23 +14,23 @@ const isWindows = os.platform() === 'win32';
 
 function getScriptPath(scriptName) {
   const scriptPath = path.join(scriptDir, scriptName);
-  
-  // 在Windows上优先使用批处理脚本
+
   if (isWindows) {
     const batScript = scriptPath.replace(/\.sh$/, '.bat');
     if (fs.existsSync(batScript)) {
       return batScript;
     }
   }
-  
+
   return scriptPath;
 }
 
 function executeScript(scriptPath) {
   try {
     if (isWindows) {
-      // Windows上使用cmd执行脚本
-      execSync(`cmd /c "${scriptPath}"`, { stdio: 'inherit', cwd: userCwd });
+      // Windows: 在用户当前目录执行脚本
+      const installCmd = `cmd /c "cd /d "${userCwd}" && "${scriptPath}""`;
+      execSync(installCmd, { stdio: 'inherit', cwd: userCwd });
     } else {
       // Unix系统上使用bash执行脚本
       execSync(`bash "${scriptPath}"`, { stdio: 'inherit', cwd: userCwd });

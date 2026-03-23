@@ -7,6 +7,9 @@ REM Usage: uninstall.bat
 echo Uninstalling GSD for Trae...
 echo.
 
+REM Save current directory (user's project directory)
+set "USER_PROJECT_DIR=%CD%"
+
 REM 1. Delete GSD source files
 set "GSD_SOURCE=%USERPROFILE%\.gsd-source"
 if exist "%GSD_SOURCE%" (
@@ -27,7 +30,9 @@ if exist "%GSDC_PATH%" (
     echo    Command directory not found, skipping
 )
 
-REM 3. Delete current project's GSD rule documents
+REM 3. Delete current project's GSD rule documents (in user's project directory)
+cd /d "%USER_PROJECT_DIR%"
+
 set "RULES_FILES=project_rules.md gsd-agents.md gsd-references.md"
 set "RULES_DELETED=0"
 

@@ -7,6 +7,9 @@ REM Usage: install.bat
 echo Installing GSD for Trae...
 echo.
 
+REM Save current directory (user's project directory)
+set "USER_PROJECT_DIR=%CD%"
+
 REM 1. Set path variables
 set "GSD_SOURCE=%USERPROFILE%\.gsd-source"
 set "GSD_REPO=https://github.com/glittercowboy/get-shit-done.git"
@@ -41,6 +44,9 @@ if exist "%GSDC_PATH%" (
 xcopy "%GSD_SOURCE%\commands\gsd" "%GSDC_PATH%" /E /I /Y >nul 2>&1
 echo Created command directory: %GSDC_PATH%
 
+REM Return to user's project directory for file operations
+cd /d "%USER_PROJECT_DIR%"
+
 REM 4. Check if project_rules.md already exists
 if exist ".trae\rules\project_rules.md" (
     for /f "tokens=1-6 delims=:.,/ " %%a in ("%time%") do (
@@ -60,7 +66,7 @@ if not exist ".trae\rules" (
 REM 6. Copy project rule documents
 set "RULES_FILES=project_rules.md gsd-agents.md gsd-references.md"
 
-REM Try to copy from current directory first
+REM Try to copy from script's source directory first
 for %%f in (%RULES_FILES%) do (
     if exist ".trae\rules\%%f" (
         echo Copying %%f...
