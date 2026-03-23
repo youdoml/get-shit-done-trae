@@ -1,3 +1,6 @@
+# 特别说明
+本项目是基于 [Lionad-Morotar/get-shit-done-trae](https://github.com/Lionad-Morotar/get-shit-done-trae) 项目修改而来的。为windows版trae提供兼容性支持。
+
 # GSD for Trae
 
 为 [Trae](https://www.trae.ai/) 适配的 GSD（Get Shit Done）框架版本，aka get-shit-done-trae or gsd-trae。
@@ -24,8 +27,15 @@ GSD 通过流程约束解决了**上下文衰减（Context Rot）**问题——�
 | `.trae/rules/project_rules.md` | Trae 项目级规则，替代 `.claude/` 目录                          |
 | 完整工作流支持                 | `/gsd:new-project`、`/gsd:plan-phase`、`/gsd:execute-phase` 等 |
 | 中文优化                       | 针对中文开发者优化的提示和文档                                 |
+| **Windows 支持**               | 提供批处理脚本和跨平台兼容性                                   |
 
 注意，GSD 的提示词是为 Claude 优化的，如果在 Trae 中使用，个人推荐使用 Gemini-3-pro、Kimi K2.5、GLM-5，减少使用 GPT 5.2
+
+### 跨平台兼容性
+
+- **Linux/macOS**: 使用 Bash 脚本和符号链接
+- **Windows**: 使用批处理脚本和目录复制（Windows 不支持符号链接）
+- **Node.js CLI**: 自动检测操作系统并选择合适的脚本执行方式
 
 ## 快速开始
 
@@ -37,10 +47,26 @@ GSD 通过流程约束解决了**上下文衰减（Context Rot）**问题——�
 npx -y gsd-trae@latest
 ```
 
+### 方式二：直接运行脚本（Windows）
+
+在Windows上，可以直接运行批处理脚本：
+
+```cmd
+# 安装
+install.bat
+
+# 卸载
+uninstall.bat
+```
+
 ### 卸载
 
 ```bash
+# 使用 npx
 npx -y gsd-trae@latest uninstall
+
+# 或直接运行脚本（Windows）
+uninstall.bat
 ```
 
 

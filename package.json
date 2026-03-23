@@ -33,7 +33,9 @@
     "bin/",
     "assets/",
     "install.sh",
+    "install.bat",
     "uninstall.sh",
+    "uninstall.bat",
     "README.md",
     "CHANGELOG.md"
   ],

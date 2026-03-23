@@ -5,6 +5,15 @@
 
 set -e
 
+# 检测操作系统
+if [ "$(uname)" = "Darwin" ]; then
+    OS="macOS"
+elif [ "$(expr substr $(uname -s) 1 5)" = "Linux" ]; then
+    OS="Linux"
+else
+    OS="Other"
+fi
+
 GSD_SOURCE="$HOME/.gsd-source"
 GSDC_PATH="$HOME/.gsdc"
 
@@ -20,13 +29,17 @@ else
     echo "   ℹ️  GSD 源文件不存在，跳过"
 fi
 
-# 2. 删除符号链接
-if [ -L "$GSDC_PATH" ]; then
-    echo "🔗 删除符号链接: ~/.gsdc"
-    rm "$GSDC_PATH"
+# 2. 删除符号链接或目录
+if [ -L "$GSDC_PATH" ] || [ -d "$GSDC_PATH" ]; then
+    if [ "$OS" = "Linux" ] || [ "$OS" = "macOS" ]; then
+        echo "🔗 删除符号链接: ~/.gsdc"
+    else
+        echo "📁 删除命令目录: ~/.gsdc"
+    fi
+    rm -rf "$GSDC_PATH"
     echo "   ✅ 已删除"
 else
-    echo "   ℹ️  符号链接不存在，跳过"
+    echo "   ℹ️  符号链接/目录不存在，跳过"
 fi
 
 # 3. 删除当前项目的 GSD 规则文档

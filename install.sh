@@ -5,6 +5,15 @@
 
 set -e
 
+# 检测操作系统
+if [ "$(uname)" = "Darwin" ]; then
+    OS="macOS"
+elif [ "$(expr substr $(uname -s) 1 5)" = "Linux" ]; then
+    OS="Linux"
+else
+    OS="Other"
+fi
+
 GSD_SOURCE="$HOME/.gsd-source"
 GSD_REPO="https://github.com/glittercowboy/get-shit-done.git"
 REPO_URL="https://github.com/Lionad-Morotar/get-shit-done-trae"
@@ -21,15 +30,23 @@ else
     (cd "$GSD_SOURCE" && git pull >/dev/null 2>&1)
 fi
 
-# 2. 创建 ~/.gsdc 符号链接（指向 ~/.gsd-source/commands/gsd）
+# 2. 创建 ~/.gsdc 符号链接或目录（指向 ~/.gsd-source/commands/gsd）
 GSDC_PATH="$HOME/.gsdc"
 if [ -L "$GSDC_PATH" ]; then
     rm "$GSDC_PATH"
 elif [ -e "$GSDC_PATH" ]; then
     rm -rf "$GSDC_PATH"
 fi
-ln -s "$GSD_SOURCE/commands/gsd" "$GSDC_PATH"
-echo "🔗 创建符号链接: ~/.gsdc → $GSD_SOURCE/commands/gsd"
+
+if [ "$OS" = "Linux" ] || [ "$OS" = "macOS" ]; then
+    # Unix系统使用符号链接
+    ln -s "$GSD_SOURCE/commands/gsd" "$GSDC_PATH"
+    echo "🔗 创建符号链接: ~/.gsdc → $GSD_SOURCE/commands/gsd"
+else
+    # 其他系统使用目录复制
+    cp -r "$GSD_SOURCE/commands/gsd" "$GSDC_PATH"
+    echo "📁 创建命令目录: ~/.gsdc (复制自 $GSD_SOURCE/commands/gsd)"
+fi
 
 # 3. 检查是否已存在 project_rules.md
 if [ -f ".trae/rules/project_rules.md" ]; then
